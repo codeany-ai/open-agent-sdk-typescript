@@ -36,6 +36,13 @@ export const ParallelWebSearchTool = defineTool({
       },
       // Keep both the POST requests and the optional SSE GET on the configured origin.
       fetch: (input, init) => fetch(input, { ...init, redirect: 'error' }),
+      // Each search opens its own session. SDK retry timers can outlive a cancelled search.
+      reconnectionOptions: {
+        maxRetries: 0,
+        initialReconnectionDelay: 1000,
+        maxReconnectionDelay: 30000,
+        reconnectionDelayGrowFactor: 1.5,
+      },
     })
     const { abortSignal } = context
     const timeoutSignal = AbortSignal.timeout(15000)
