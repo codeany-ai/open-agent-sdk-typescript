@@ -33,8 +33,9 @@ export const ParallelWebSearchTool = defineTool({
     const transport = new StreamableHTTPClientTransport(endpoint, {
       requestInit: {
         headers: { 'User-Agent': `${clientName}/${version}` },
-        redirect: 'error',
       },
+      // Keep both the POST requests and the optional SSE GET on the configured origin.
+      fetch: (input, init) => fetch(input, { ...init, redirect: 'error' }),
     })
     const { abortSignal } = context
     const timeoutSignal = AbortSignal.timeout(15000)
