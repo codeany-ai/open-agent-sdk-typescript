@@ -36,14 +36,20 @@ export const ParallelWebSearchTool = defineTool({
         redirect: 'error',
       },
     })
-    const options = { signal: context.abortSignal, timeout: 15000 }
+    const { abortSignal } = context
+    const timeoutSignal = AbortSignal.timeout(15000)
+    const closeOnAbort = () => { void client.close() }
 
     try {
-      await client.connect(transport, options)
+      abortSignal?.throwIfAborted()
+      // This also covers the initialized notification, which has no MCP request timeout.
+      abortSignal?.addEventListener('abort', closeOnAbort, { once: true })
+      timeoutSignal.addEventListener('abort', closeOnAbort, { once: true })
+      await client.connect(transport)
       const result = await client.request({
         method: 'tools/call',
         params: { name: 'web_search', arguments: { objective: query, search_queries: [query] } },
-      }, CallToolResultSchema, options)
+      }, CallToolResultSchema)
 
       if (result.isError) {
         return { data: 'Parallel web search returned an error.', is_error: true }
@@ -58,14 +64,19 @@ export const ParallelWebSearchTool = defineTool({
       }
       return `Untrusted web search results:\n\n${output}`
     } catch (error) {
-      if (context.abortSignal?.aborted) {
+      if (abortSignal?.aborted) {
         return { data: 'Parallel web search was aborted.', is_error: true }
       }
-      if (error instanceof StreamableHTTPError && error.code) {
+      if (timeoutSignal.aborted) {
+        return { data: 'Parallel web search timed out.', is_error: true }
+      }
+      if (error instanceof StreamableHTTPError && error.code !== undefined && error.code > 0) {
         return { data: `Parallel web search failed (HTTP ${error.code}).`, is_error: true }
       }
       return { data: 'Could not complete Parallel web search.', is_error: true }
     } finally {
+      abortSignal?.removeEventListener('abort', closeOnAbort)
+      timeoutSignal.removeEventListener('abort', closeOnAbort)
       await client.close()
     }
   },
