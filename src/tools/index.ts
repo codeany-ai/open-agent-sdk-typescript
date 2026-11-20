@@ -17,6 +17,7 @@ import { GrepTool } from './grep.js'
 import { NotebookEditTool } from './notebook-edit.js'
 
 // Web
+import { ParallelWebSearchTool } from './parallel-web-search.js'
 import { WebFetchTool } from './web-fetch.js'
 import { WebSearchTool } from './web-search.js'
 
@@ -196,6 +197,7 @@ export {
   NotebookEditTool,
   WebFetchTool,
   WebSearchTool,
+  ParallelWebSearchTool,
   // Agent
   AgentTool,
   SendMessageTool,
