@@ -245,6 +245,25 @@ console.log(result.text);
 await agent.close();
 ```
 
+### Opt-in web search with Parallel
+
+Register `ParallelWebSearchTool` alongside the built-in tools, or add it to
+your existing `tools` array.
+
+```typescript
+import { createAgent, getAllBaseTools, ParallelWebSearchTool } from "@codeany/open-agent-sdk";
+
+const agent = createAgent({
+  tools: [...getAllBaseTools(), ParallelWebSearchTool],
+});
+```
+
+If you use `allowedTools`, include `"ParallelWebSearch"` to make it available.
+The tool sends its query to Parallel's public MCP endpoint and returns source
+URLs and excerpts. It requires no Parallel API key. Requests include the SDK's
+name and version in the HTTP User-Agent so Parallel can measure aggregate use
+of the free MCP endpoint.
+
 ### Subagents
 
 ```typescript
