@@ -97,6 +97,7 @@ export {
   // Web
   WebFetchTool,
   WebSearchTool,
+  KeenableWebSearchTool,
 
   // Agent & Multi-agent
   AgentTool,

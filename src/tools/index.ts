@@ -19,6 +19,7 @@ import { NotebookEditTool } from './notebook-edit.js'
 // Web
 import { WebFetchTool } from './web-fetch.js'
 import { WebSearchTool } from './web-search.js'
+import { KeenableWebSearchTool } from './keenable-web-search.js'
 
 // Agent & Multi-agent
 import { AgentTool } from './agent-tool.js'
@@ -196,6 +197,7 @@ export {
   NotebookEditTool,
   WebFetchTool,
   WebSearchTool,
+  KeenableWebSearchTool,
   // Agent
   AgentTool,
   SendMessageTool,
