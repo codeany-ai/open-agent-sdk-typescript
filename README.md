@@ -226,6 +226,24 @@ const hooks = createHookRegistry({
 
 20 lifecycle events: `PreToolUse`, `PostToolUse`, `PostToolUseFailure`, `SessionStart`, `SessionEnd`, `Stop`, `SubagentStart`, `SubagentStop`, `UserPromptSubmit`, `PermissionRequest`, `PermissionDenied`, `TaskCreated`, `TaskCompleted`, `ConfigChange`, `CwdChanged`, `FileChanged`, `Notification`, `PreCompact`, `PostCompact`, `TeammateIdle`.
 
+### Opt-in web search with Keenable
+
+`KeenableWebSearchTool` is not in the default tool set. Add it next to the
+built-in tools when you want it:
+
+```typescript
+import { createAgent, getAllBaseTools, KeenableWebSearchTool } from "@codeany/open-agent-sdk";
+
+const agent = createAgent({
+  tools: [...getAllBaseTools(), KeenableWebSearchTool],
+});
+```
+
+If you use `allowedTools`, include `"KeenableWebSearch"`. No API key is needed:
+keyless requests go to Keenable's public search endpoint with
+`X-Keenable-Title: open-agent-sdk-typescript`. Set `KEENABLE_API_KEY` to use the
+keyed endpoint instead.
+
 ### MCP server integration
 
 ```typescript
